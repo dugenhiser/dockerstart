@@ -1,16 +1,17 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
-WORKDIR /app
+FROM microsoft/aspnetcore-build AS build
 
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
+WORKDIR /Docker
+
+COPY . .
+
 RUN dotnet restore
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish --output /output --configuration Release
 
-# Build runtime image
-FROM microsoft/aspnetcore:2.0
+FROM microsoft/aspnetcore-build
+
+COPY --from=build /output /app
+
 WORKDIR /app
-COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "Docker.dll"] 
+
+ENTRYPOINT [ "dotnet", "Docker.dll" ]
