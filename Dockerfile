@@ -15,4 +15,3 @@ COPY --from=build /output /app
 WORKDIR /app
 
 ENTRYPOINT [ "dotnet", "Docker.dll" ]
- 
