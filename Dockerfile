@@ -8,10 +8,12 @@ RUN dotnet restore
 
 RUN dotnet publish --output /output --configuration Release
 
-FROM microsoft/aspnetcore-build
-
-COPY --from=build /output /app
+FROM microsoft/aspnetcore
 
 WORKDIR /app
+
+COPY --from=build /output .
+
+
 
 ENTRYPOINT [ "dotnet", "Docker.dll" ]
